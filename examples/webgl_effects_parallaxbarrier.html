@@ -54,7 +54,7 @@
 				document.body.appendChild( container );
 
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 100 );
-				camera.position.z = 100
+				camera.position.z = 10
 				// camera.focalLength = 3;
 
 				// deviceOrientationControl = new DeviceOrientationControls( camera );
@@ -71,6 +71,7 @@
 				// hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
 				// hemiLight.groundColor.set(0xffffff)
 				hemiLight.position.set( settings['hemiLight x axis'], settings['hemiLight y axis'], settings['hemiLight z axis'] );
+				hemiLight.visible = settings['hemiLight show']
 				scene.add( hemiLight );
 
 				const hemiLightHelper = new THREE.HemisphereLightHelper( hemiLight, 10 );
@@ -142,14 +143,15 @@
 			}
 
 			// lights
-			function createModelWithLight( color = 0xffffff ) {
-				const intensity = 0.2;
+			function createModelWithLight( color = 0xff0040 ) {
+				const intensity = 2;
 
-				const light = new THREE.PointLight( color, intensity, 0 );
+				const light = new THREE.PointLight( 0xff0040, intensity, 10 );
+				// light1 = new THREE.PointLight( 0xff0040, 2, 50 );
 				// light.castShadow = true;
-				light.shadow.camera.near = 1;
-				light.shadow.camera.far = 10;
-				light.shadow.bias = - 0.005; // reduces self-shadowing on double-sided objects
+				// light.shadow.camera.near = 1;
+				// light.shadow.camera.far = 10;
+				// light.shadow.bias = - 0.005; // reduces self-shadowing on double-sided objects
 				// 辅助查看器
 				const pointLightHelper = new THREE.PointLightHelper(light, 0.5)
 
@@ -164,8 +166,8 @@
 					
 					const positionRandom = Math.random() * 10 - 5
 					const scaleRandom = Math.random() * 1
-					model.position.set( positionRandom, positionRandom, positionRandom );
-					model.scale.set( scaleRandom, scaleRandom, scaleRandom );
+					light.position.set( positionRandom, positionRandom, positionRandom );
+					light.scale.set( scaleRandom, scaleRandom, scaleRandom );
 
 					// scene.add(model)
 					// spheres.push(model)
