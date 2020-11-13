@@ -1,17 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - effects - parallax barrier</title>
+		<title>demo</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="main.css">
 	</head>
 
 	<body>
-		<div id="info">
-			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - effects - parallax barrier<br/>
-			skybox by <a href="http://ict.debevec.org/~debevec/" target="_blank" rel="noopener">Paul Debevec</a>
-		</div>
 
 		<script type="module">
 			import * as THREE from '../build/three.module.js';
@@ -25,7 +21,7 @@
 
 			const spheres = [];
 			// const GLFT_PATH = 'DamagedHelmet.gltf'
-			const GLFT_PATH = 'models/gltf/DamagedHelmet/glTF/test05.json'
+			const GLFT_PATH = 'models/gltf/DamagedHelmet/glTF/model2.json'
 			// const GLFT_PATH = "models/json/lightmap/lightmap.json"
 			// const GLFT_PATH = 'test6.gltf'
 
@@ -39,7 +35,7 @@
 
 			let mouseX = 0;
 			let mouseY = 0;
-			const MODEL_LENGTH = 20 // 控制模型个数
+			const MODEL_LENGTH = 50 // 控制模型个数
 
 			let windowHalfX = window.innerWidth / 2;
 			let windowHalfY = window.innerHeight / 2;
@@ -55,7 +51,7 @@
 				document.body.appendChild( container );
 
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 100 );
-				camera.position.z = 10;
+				camera.position.z = 10
 				// camera.focalLength = 3;
 
 				// deviceOrientationControl = new DeviceOrientationControls( camera );
@@ -144,7 +140,7 @@
 				const intensity = 1.5;
 
 				const light = new THREE.PointLight( color, intensity, 20 );
-				light.castShadow = true;
+				// light.castShadow = true;
 				light.shadow.camera.near = 1;
 				light.shadow.camera.far = 60;
 				light.shadow.bias = - 0.005; // reduces self-shadowing on double-sided objects
@@ -158,7 +154,7 @@
 					console.log('gltf loaded', model)
 					
 					const positionRandom = Math.random() * 10 - 5
-					const scaleRandom = Math.random() * 1 + 10
+					const scaleRandom = Math.random() * 1 + 0
 					model.position.set( positionRandom, positionRandom, positionRandom );
 					model.scale.set( scaleRandom, scaleRandom, scaleRandom );
 
