@@ -14,7 +14,6 @@
 		</div>
 
 		<script type="module">
-
 			import * as THREE from '../build/three.module.js';
 			import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
 			import Stats from './jsm/libs/stats.module.js';
@@ -25,8 +24,10 @@
 			let container, camera, scene, renderer, loader, stats, orbitControls, deviceOrientationControl, lightProbe, directionalLight, hemiLight;
 
 			const spheres = [];
-			const GLFT_PATH = 'DamagedHelmet.gltf'
-			// const GLFT_PATH = 'test4.gltf'
+			// const GLFT_PATH = 'DamagedHelmet.gltf'
+			const GLFT_PATH = 'models/gltf/DamagedHelmet/glTF/test05.json'
+			// const GLFT_PATH = "models/json/lightmap/lightmap.json"
+			// const GLFT_PATH = 'test6.gltf'
 
 			const path = "textures/cube/pisa/";
 			const format = '.jpg';
@@ -38,7 +39,7 @@
 
 			let mouseX = 0;
 			let mouseY = 0;
-			const MODEL_LENGTH = 2 // 控制模型个数
+			const MODEL_LENGTH = 20 // 控制模型个数
 
 			let windowHalfX = window.innerWidth / 2;
 			let windowHalfY = window.innerHeight / 2;
@@ -65,10 +66,10 @@
 				scene.background = textureCube;
 				window.scene = scene // devtools 用
 
-				hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1 );
+				hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, settings['hemiLight strength'] );
 				hemiLight.color.setHSL( 0.6, 1, 0.6 );
 				hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-				hemiLight.position.set( 0, settings['hemiLight y axis'], 0 );
+				hemiLight.position.set( settings['hemiLight x axis'], settings['hemiLight y axis'], settings['hemiLight z axis'] );
 				scene.add( hemiLight );
 
 				const hemiLightHelper = new THREE.HemisphereLightHelper( hemiLight, 10 );
@@ -88,7 +89,8 @@
 				// 	spheres.push( mesh );
 				// }
 
-				loader = new GLTFLoader().setPath( 'models/gltf/DamagedHelmet/glTF/' );
+				// loader = new GLTFLoader().setPath( 'models/gltf/DamagedHelmet/glTF/' );
+				loader = new THREE.ObjectLoader();
 				for ( let i = 0; i < MODEL_LENGTH; i ++ ) {
 					createModelWithLight(0x0088ff)
 				}
@@ -151,12 +153,12 @@
 				// let material = new THREE.MeshBasicMaterial( { color: color } );
 				// material.color.multiplyScalar( intensity );
 				// let sphere = new THREE.Mesh( geometry, material );
-				loader.load( GLFT_PATH, function ( gltf ) {
-					const model = gltf.scene;
+				loader.load( GLFT_PATH, function ( model ) {
+					// const model = gltf.scene;
 					console.log('gltf loaded', model)
 					
 					const positionRandom = Math.random() * 10 - 5
-					const scaleRandom = Math.random() * 1 + 1
+					const scaleRandom = Math.random() * 1 + 10
 					model.position.set( positionRandom, positionRandom, positionRandom );
 					model.scale.set( scaleRandom, scaleRandom, scaleRandom );
 

@@ -2,7 +2,9 @@ import { GUI } from './jsm/libs/dat.gui.module.js';
 
 export let settings = {
 	'hemiLight show': true,
+	'hemiLight x axis': 0,
 	'hemiLight y axis': 50,
+	'hemiLight z axis': 0,
 	'hemiLight strength': 0.6,
 };
 
@@ -19,7 +21,9 @@ export function createPanel({
 	// const folder6 = panel.addFolder( 'General Speed' );
 
 	folder1.add( settings, 'hemiLight show' ).onChange( (visibility) => showHemiLight(hemiLight, hemiLightHelper, visibility) );
-	folder1.add( settings, 'hemiLight y axis', 0, 100, 10).onChange(() => changeHemiLightY(hemiLight));
+	folder1.add( settings, 'hemiLight x axis', 0, 100, 10).onChange(() => changeHemiLightAxis(hemiLight));
+	folder1.add( settings, 'hemiLight y axis', 0, 100, 10).onChange(() => changeHemiLightAxis(hemiLight));
+	folder1.add( settings, 'hemiLight z axis', 0, 100, 10).onChange(() => changeHemiLightAxis(hemiLight));
 	folder1.add( settings, 'hemiLight strength', 0, 1, 0.1 ).onChange(() => changeHemiLightStrength(hemiLight));
 	// folder2.add( settings, 'deactivate all' );
 	// folder2.add( settings, 'activate all' );
@@ -84,9 +88,9 @@ function showHemiLight(hemiLight, hemiLightHelper, visibility) {
 	hemiLightHelper.visible = visibility;
 }
 
-function changeHemiLightY(hemiLight) {
-	hemiLight.position.set( 0, settings[ 'hemiLight y axis' ], 0 );
-	console.log(settings[ 'hemiLight y axis' ], hemiLight.position.y);
+function changeHemiLightAxis(hemiLight) {
+	hemiLight.position.set( settings[ 'hemiLight x axis' ], settings[ 'hemiLight y axis' ], settings[ 'hemiLight z axis' ] );
+	console.log(hemiLight.position.x, hemiLight.position.y, hemiLight.position.z)
 }
 
 function changeHemiLightStrength(hemiLight) {

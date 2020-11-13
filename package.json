@@ -114,5 +114,8 @@
       "build/three.module.js"
     ],
     "directories": {}
+  },
+  "dependencies": {
+    "esm": "^3.2.25"
   }
 }
