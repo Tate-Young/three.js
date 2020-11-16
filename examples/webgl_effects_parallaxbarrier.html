@@ -36,6 +36,7 @@
 				path + 'py' + format, path + 'ny' + format,
 				path + 'pz' + format, path + 'nz' + format
 			];
+			const textureCube = new THREE.CubeTextureLoader().load( urls )
 
 			let mouseX = 0;
 			let mouseY = 0;
@@ -44,7 +45,7 @@
 			let windowHalfX = window.innerWidth / 2;
 			let windowHalfY = window.innerHeight / 2;
 
-			document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+			document.addEventListener( 'mousemove', onDocumentMouseMove, false )
 
 			init();
 			animate();
@@ -59,11 +60,9 @@
 
 				// deviceOrientationControl = new DeviceOrientationControls( camera );
 
-				const textureCube = new THREE.CubeTextureLoader().load( urls );
-
 				scene = new THREE.Scene();
 				scene.background = textureCube;
-				scene.fog = new THREE.Fog( 0xff0040, 0.01, 100 );
+				// scene.fog = new THREE.Fog( 0xff0040, 0.01, 100 );
 				window.scene = scene // devtools 用
 
 				// 半球光/全局光
@@ -144,8 +143,10 @@
 			}
 
 			// lights
-			function createModelWithLight( color = 0xff0040 ) {
+			function createModelWithLight( color = 0xffffff ) {
 				const intensity = 2;
+
+				// const cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, envMap: textureCube } );
 
 				// let geometry = new THREE.SphereBufferGeometry( 0.3, 12, 6 );
 				// let material = new THREE.MeshBasicMaterial( { color: color } );
@@ -153,50 +154,54 @@
 				// let sphere = new THREE.Mesh( geometry, material );
 				loader.load(GLFT_PATH, function(originalModel) {
 					// const model = gltf.scene
-					console.log('gltf loaded', originalModel)
+					console.log('model loaded', originalModel)
 
-					const texture = new THREE.Texture()
+					// const texture = new THREE.TextureLoader().load('../logo.png')
+					const texture = new THREE.TextureLoader().load('textures/uv_grid_opengl.jpg')
 
 					//加载图片
-					const imgLoader = new THREE.ImageLoader()
-					imgLoader.load('../logo.png', function(img) {
-						//将图片值赋于纹理
-						texture.image = img
-						texture.needsUpdate = true
-					})
-					originalModel.traverse(function(child) {
-						if (child instanceof THREE.Mesh) {
-							//将贴图赋于材质
-							child.material.map = texture
-							//重点，没有该句会导致PNG无法正确显示透明效果
-							child.material.transparent = true
+					// const imgLoader = new THREE.ImageLoader()
+					// imgLoader.load('../logo.png', function(img) {
+					// 	//将图片值赋于纹理
+					// 	texture.image = img
+					// 	texture.needsUpdate = true
+						originalModel.traverse(function(child) {
+							if (child.isMesh) {
+								//将贴图赋于材质
+								child.material.map = texture
+								// child.material.opacity = 0
+								//重点，没有该句会导致PNG无法正确显示透明效果
+								// child.material.transparent = true
+							}
+						})
+						// originalModel.material = cubeMaterial
+						
+						for ( let i = 0; i < MODEL_LENGTH; i ++ ) {
+							const positionRandom = Math.random() * 10 - 5
+							const scaleRandom = Math.random() * 1
+							// 基于现有模型克隆，减少性能损耗
+							const model = originalModel.clone()
+							const light = new THREE.PointLight( color, intensity, 3 );
+							// light1 = new THREE.PointLight( 0xff0040, 2, 50 );
+							// light.castShadow = true;
+							// light.shadow.camera.near = 1;
+							// light.shadow.camera.far = 10;
+							// light.shadow.bias = - 0.005; // reduces self-shadowing on double-sided objects
+							// 辅助查看器
+							const pointLightHelper = new THREE.PointLightHelper(light, 0.5)
+							console.log('clone ', model)
+							light.position.set( positionRandom, positionRandom, positionRandom );
+							light.scale.set( scaleRandom, scaleRandom, scaleRandom );
+	
+							// scene.add(model)
+							// spheres.push(model)
+							light.add( model );
+							scene.add(light, pointLightHelper)
+							spheres.push(light)
 						}
 					})
-					for ( let i = 0; i < MODEL_LENGTH; i ++ ) {
-						const positionRandom = Math.random() * 10 - 5
-						const scaleRandom = Math.random() * 1
-						const model = originalModel.clone()
-						const light = new THREE.PointLight( 0xff0040, intensity, 3 );
-						// light1 = new THREE.PointLight( 0xff0040, 2, 50 );
-						// light.castShadow = true;
-						// light.shadow.camera.near = 1;
-						// light.shadow.camera.far = 10;
-						// light.shadow.bias = - 0.005; // reduces self-shadowing on double-sided objects
-						// 辅助查看器
-						const pointLightHelper = new THREE.PointLightHelper(light, 0.5)
-						console.log('clone ', model)
-						light.position.set( positionRandom, positionRandom, positionRandom );
-						light.scale.set( scaleRandom, scaleRandom, scaleRandom );
 
-						// scene.add(model)
-						// spheres.push(model)
-						light.add( model );
-						scene.add(light)
-						scene.add(pointLightHelper)
-						spheres.push(light)
-					}
-
-				})
+				// })
 			}
 
 			function animate() {
