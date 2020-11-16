@@ -62,7 +62,7 @@
 
 				scene = new THREE.Scene();
 				scene.background = textureCube;
-				// scene.fog = new THREE.Fog( 0xff0040, 0.01, 100 );
+				scene.fog = new THREE.Fog( 0xff0040, 0.01, 100 );
 				window.scene = scene // devtools 用
 
 				// 半球光/全局光
@@ -157,7 +157,7 @@
 					console.log('model loaded', originalModel)
 
 					// const texture = new THREE.TextureLoader().load('../logo.png')
-					const texture = new THREE.TextureLoader().load('textures/uv_grid_opengl.jpg')
+					const texture = new THREE.TextureLoader().load('textures/color0.jpg')
 
 					//加载图片
 					// const imgLoader = new THREE.ImageLoader()
@@ -181,25 +181,26 @@
 							const scaleRandom = Math.random() * 1
 							// 基于现有模型克隆，减少性能损耗
 							const model = originalModel.clone()
-							const light = new THREE.PointLight( color, intensity, 3 );
+							const light = new THREE.PointLight( color, intensity, 2.5 );
 							// light1 = new THREE.PointLight( 0xff0040, 2, 50 );
 							// light.castShadow = true;
 							// light.shadow.camera.near = 1;
 							// light.shadow.camera.far = 10;
 							// light.shadow.bias = - 0.005; // reduces self-shadowing on double-sided objects
 							// 辅助查看器
-							const pointLightHelper = new THREE.PointLightHelper(light, 0.5)
-							console.log('clone ', model)
+							// const pointLightHelper = new THREE.PointLightHelper(light, 0.5)
 							light.position.set( positionRandom, positionRandom, positionRandom );
 							light.scale.set( scaleRandom, scaleRandom, scaleRandom );
 	
 							// scene.add(model)
 							// spheres.push(model)
 							light.add( model );
-							scene.add(light, pointLightHelper)
+							// scene.add(light, pointLightHelper)
+							scene.add(light)
 							spheres.push(light)
 						}
 					})
+					console.log('scene  ', scene)
 
 				// })
 			}
