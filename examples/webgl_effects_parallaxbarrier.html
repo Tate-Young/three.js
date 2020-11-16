@@ -147,7 +147,6 @@
 			function createModelWithLight( color = 0xff0040 ) {
 				const intensity = 2;
 
-
 				// let geometry = new THREE.SphereBufferGeometry( 0.3, 12, 6 );
 				// let material = new THREE.MeshBasicMaterial( { color: color } );
 				// material.color.multiplyScalar( intensity );
@@ -155,7 +154,24 @@
 				loader.load(GLFT_PATH, function(originalModel) {
 					// const model = gltf.scene
 					console.log('gltf loaded', originalModel)
-					
+
+					const texture = new THREE.Texture()
+
+					//加载图片
+					const imgLoader = new THREE.ImageLoader()
+					imgLoader.load('../logo.png', function(img) {
+						//将图片值赋于纹理
+						texture.image = img
+						texture.needsUpdate = true
+					})
+					originalModel.traverse(function(child) {
+						if (child instanceof THREE.Mesh) {
+							//将贴图赋于材质
+							child.material.map = texture
+							//重点，没有该句会导致PNG无法正确显示透明效果
+							child.material.transparent = true
+						}
+					})
 					for ( let i = 0; i < MODEL_LENGTH; i ++ ) {
 						const positionRandom = Math.random() * 10 - 5
 						const scaleRandom = Math.random() * 1
@@ -171,7 +187,7 @@
 						console.log('clone ', model)
 						light.position.set( positionRandom, positionRandom, positionRandom );
 						light.scale.set( scaleRandom, scaleRandom, scaleRandom );
-	
+
 						// scene.add(model)
 						// spheres.push(model)
 						light.add( model );
@@ -179,7 +195,7 @@
 						scene.add(pointLightHelper)
 						spheres.push(light)
 					}
-					
+
 				})
 			}
 
