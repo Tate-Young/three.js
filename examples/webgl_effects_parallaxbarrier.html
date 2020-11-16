@@ -142,6 +142,7 @@
 			}
 
 			// lights
+			const clickObjects = []
 			function createModelWithLight( color = 0xffffff ) {
 				const intensity = 2;
 
@@ -174,7 +175,7 @@
 							}
 						})
 						// originalModel.material = cubeMaterial
-						
+
 						for ( let i = 0; i < MODEL_LENGTH; i ++ ) {
 							const positionRandom = Math.random() * 10 - 5
 							const scaleRandom = Math.random() * 1
@@ -190,16 +191,55 @@
 							// const pointLightHelper = new THREE.PointLightHelper(light, 0.5)
 							light.position.set( positionRandom, positionRandom, positionRandom );
 							light.scale.set( scaleRandom, scaleRandom, scaleRandom );
-	
+
 							light.add( model );
 							// scene.add(light, pointLightHelper)
 							scene.add(light)
+							clickObjects.push(...model.children);
 							spheres.push(light)
 						}
 					})
 					console.log('scene  ', scene)
 
 				// })
+			}
+			addEventListener('click', onMouseDblclick, false);
+			let selectObject
+			function onMouseDblclick(event) {
+
+				// 获取 raycaster 和所有模型相交的数组，其中的元素按照距离排序，越近的越靠前
+				const intersects = getIntersects(event)
+
+				// 获取选中最近的 Mesh 对象
+				if (intersects.length !== 0 && intersects[0].object instanceof THREE.Mesh) {
+					selectObject = intersects[0].object;
+					// changeMaterial(selectObject);
+					console.log(selectObject)
+				} else {
+					console.log("未选中 Mesh!");
+				}
+			}
+
+			// 获取与射线相交的对象数组
+			function getIntersects(event) {
+				event.preventDefault();
+				console.log("event.clientX:"+event.clientX);
+				console.log("event.clientY:"+event.clientY);
+
+				// 声明 raycaster 和 mouse 变量
+				const raycaster = new THREE.Raycaster()
+				const mouse = new THREE.Vector2()
+
+				// 通过鼠标点击位置,计算出 raycaster 所需点的位置,以屏幕为中心点,范围 -1 到 1
+				mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+				mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+				//通过鼠标点击的位置(二维坐标)和当前相机的矩阵计算出射线位置
+				raycaster.setFromCamera(mouse, camera);
+
+				// 获取与射线相交的对象数组，其中的元素按照距离排序，越近的越靠前
+				//返回选中的对象
+				return raycaster.intersectObjects(clickObjects);
 			}
 
 			function animate() {
